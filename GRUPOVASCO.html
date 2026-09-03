@@ -573,7 +573,7 @@
           <label for="fCliente">Cliente</label>
           <select id="fCliente"></select>
         </div>
-        <div class="field">
+        <div class="field" style="display:none;">
           <label for="fEst">Sector</label>
           <select id="fEst"></select>
         </div>
@@ -678,7 +678,7 @@
           <label for="rCliente">Cliente</label>
           <select id="rCliente"></select>
         </div>
-        <div class="field">
+        <div class="field" style="display:none;">
           <label for="rEst">Sector</label>
           <select id="rEst"></select>
         </div>
@@ -1091,6 +1091,9 @@
     KNOWN_PROPS_BY_SECTOR[s.estacion].push(s.prop);
   });
   var KNOWN_PROPS_ALL = uniqueSorted(SHEET_REGISTRY.map(function(s){return s.prop;}));
+  // Operadores registrados en las hojas de origen que aun no tienen incidentes
+  // cargados, para que igual aparezcan en el filtro de Operador.
+  var ALWAYS_SHOW_OPERADORES = ["Bryan Mendoza"];
 
   function renameOptionLabel(sel, value, newLabel){
     Array.prototype.forEach.call(sel.options, function(o){ if (o.value === value) o.textContent = newLabel; });
@@ -1117,7 +1120,7 @@
     fillSelect(els.fNivel, NIVEL_ORDER.filter(function(n){ return DATA.some(function(d){return d.nivel===n;}); }), "Todos los niveles");
     renameOptionLabel(els.fNivel, "Sin clasificar", "OTROS");
     fillSelect(els.fEst, estaciones, "Todos los sectores");
-    fillSelect(els.fOperador, uniqueSorted(DATA.map(function(d){return d.op;})), "Todos los operadores");
+    fillSelect(els.fOperador, uniqueSorted(DATA.map(function(d){return d.op;}).concat(ALWAYS_SHOW_OPERADORES)), "Todos los operadores");
     var rEstEl = document.getElementById("rEst");
     if (rEstEl){
       fillSelect(document.getElementById("rCliente"), uniqueSorted(DATA.map(function(d){return d.cliente;})), "Todos los clientes");
@@ -1127,7 +1130,7 @@
       renameOptionLabel(document.getElementById("rTipo"), "Sin clasificar", "OTROS");
       fillSelect(document.getElementById("rNivel"), NIVEL_ORDER.filter(function(n){ return DATA.some(function(d){return d.nivel===n;}); }), "Todos los niveles");
       renameOptionLabel(document.getElementById("rNivel"), "Sin clasificar", "OTROS");
-      fillSelect(document.getElementById("rOperador"), uniqueSorted(DATA.map(function(d){return d.op;})), "Todos los operadores");
+      fillSelect(document.getElementById("rOperador"), uniqueSorted(DATA.map(function(d){return d.op;}).concat(ALWAYS_SHOW_OPERADORES)), "Todos los operadores");
     }
   }
   populateFilters();
